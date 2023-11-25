@@ -53,7 +53,7 @@ def orthogonalize(V:Coordinate, U:Coordinate) -> Coordinate:
         projV_U = ((V*U)/(U*U)) * U
         V = V - projV_U
 
-        assert is_orthogonal(V, U), "Gram-Schmidt not working. V is not Orthogonal with U."
+        assert is_orthogonal(V, U), f"Gram-Schmidt not working. V:{V} is not Orthogonal with U:{U}."
 
     return V
 
@@ -66,3 +66,23 @@ def normalize(V):
 
 def is_orthogonal(V:Coordinate, U:Coordinate) -> bool:
     return V * U == 0
+
+def camera_perspective_projection(cam, view, p_univ:Coordinate):
+    p_c_distance = p_univ - cam.C
+    
+    x_comp = cam.U * p_c_distance
+    y_comp = cam.V * p_c_distance
+    z_comp = cam.N * p_c_distance
+
+    p_proj = Coordinate(x_comp, y_comp, z_comp)
+    
+    x_comp = (cam.d / cam.hx) * (p_proj.x / p_proj.z)
+    y_comp = (cam.d / cam.hy) * (p_proj.y / p_proj.z)
+
+    p_norm = Coordinate(x_comp, y_comp)
+
+    i_comp = math.floor(((p_norm.x + 1)/2) * view.WIDTH + 0.5)
+    j_comp = math.floor(view.HEIGHT - ((p_norm.y + 1)/2) * view.HEIGHT + 0.5)
+
+    p_view = Coordinate(i_comp, j_comp)
+    return p_view

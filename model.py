@@ -41,3 +41,9 @@ class Camera:
     
     def __str__(self) -> str:
         return f"Camera<C:{self.C}, N:{self.N}, V:{self.V}, U:{self.U}, d:{self.d}, hx:{self.hx}, hy:{self.hy}>"
+
+class View:
+
+    def __init__(self, WIDTH, HEIGHT) -> None:
+        self.WIDTH = WIDTH
+        self.HEIGHT = HEIGHT
