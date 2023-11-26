@@ -1,6 +1,8 @@
-from algebraic import Coordinate
+import algebraic as alg
 from model import Camera, Triangle
 import configparser
+import os
+from logger import logger
 
 def read_triangle_mesh(input_filename:str):
     """
@@ -24,7 +26,7 @@ def read_triangle_mesh(input_filename:str):
 
         lines = lines[1:] # slicing out first line.
         
-        vertex = [Coordinate( float(line[0]), float(line[1]), float(line[2]) ) 
+        vertex = [alg.Coordinate( float(line[0]), float(line[1]), float(line[2]) ) 
                   for line in 
                   [line.strip().split(" ") for line in lines[0:n_vertex]]]
         lines = lines[n_vertex:] # slicing out vertex data
@@ -41,15 +43,15 @@ def read_camera_properties():
     cam_configs = configparser.ConfigParser()
     cam_configs.read("cam.properties")
 
-    N = Coordinate(float(cam_configs["DEFAULT"]["Nx"]), 
+    N = alg.Coordinate(float(cam_configs["DEFAULT"]["Nx"]), 
                    float(cam_configs["DEFAULT"]["Ny"]), 
                    float(cam_configs["DEFAULT"]["Nz"]))
 
-    V = Coordinate(float(cam_configs["DEFAULT"]["Vx"]),
+    V = alg.Coordinate(float(cam_configs["DEFAULT"]["Vx"]),
                    float(cam_configs["DEFAULT"]["Vy"]),
                    float(cam_configs["DEFAULT"]["Vz"]))
     
-    C = Coordinate(float(cam_configs["DEFAULT"]["Cx"]),
+    C = alg.Coordinate(float(cam_configs["DEFAULT"]["Cx"]),
                    float(cam_configs["DEFAULT"]["Cy"]),
                    float(cam_configs["DEFAULT"]["Cz"]))
     
@@ -59,3 +61,23 @@ def read_camera_properties():
 
     return Camera(N, V, d, hx, hy, C)
     
+def input_mesh_filename():
+    while True:
+        user = input("Mesh filename with extension: ")
+
+        if user not in os.listdir("./data"):
+            print(f"{user} not found inside /data.")
+        else:
+            return user
+
+def project_mesh(camera, view, mesh):
+    for idx, triangle in enumerate(mesh):
+        pointA = alg.camera_perspective_projection(camera, view, triangle.pointA)
+        pointB = alg.camera_perspective_projection(camera, view, triangle.pointB)
+        pointC = alg.camera_perspective_projection(camera, view, triangle.pointC)
+        
+        pp_triangle = Triangle(pointA, pointB, pointC) 
+        logger.debug(f"{triangle} => {pp_triangle}")
+        mesh[idx] = pp_triangle
+    
+    return mesh
