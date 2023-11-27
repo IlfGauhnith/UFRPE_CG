@@ -20,6 +20,8 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((view.WIDTH, view.HEIGHT))
     pygame.display.set_caption("Wintermute 3D")
 
+    logger.debug(f"camera: {camera}")
+    logger.debug(f"resolution: {view.WIDTH}x{view.HEIGHT}")
     running = True
     while running:
         screen.fill((0, 0, 0))

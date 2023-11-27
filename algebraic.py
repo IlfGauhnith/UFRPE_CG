@@ -1,4 +1,5 @@
 import math
+from logger import logger
 
 class Coordinate:
     
@@ -75,14 +76,18 @@ def camera_perspective_projection(cam, view, p_univ:Coordinate):
     z_comp = cam.N * p_c_distance
 
     p_proj = Coordinate(x_comp, y_comp, z_comp)
-    
+    logger.debug(f"universal {p_univ} => projected {p_proj}")
+
     x_comp = (cam.d / cam.hx) * (p_proj.x / p_proj.z)
     y_comp = (cam.d / cam.hy) * (p_proj.y / p_proj.z)
 
     p_norm = Coordinate(x_comp, y_comp)
+    logger.debug(f"projected {p_proj} => normalized {p_norm}")
 
     i_comp = math.floor(((p_norm.x + 1)/2) * view.WIDTH + 0.5)
     j_comp = math.floor(view.HEIGHT - ((p_norm.y + 1)/2) * view.HEIGHT + 0.5)
 
     p_view = Coordinate(i_comp, j_comp)
+    logger.debug(f"normalized {p_norm} => view {p_view}")
+
     return p_view
