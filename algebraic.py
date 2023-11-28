@@ -66,7 +66,8 @@ def normalize(V):
     return V/V_norm
 
 def is_orthogonal(V:Coordinate, U:Coordinate) -> bool:
-    return V * U == 0
+    prod = abs(V * U)
+    return 0 <= prod <= 1e-10
 
 def camera_perspective_projection(cam, view, p_univ:Coordinate):
     p_c_distance = p_univ - cam.C

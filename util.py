@@ -39,25 +39,25 @@ def read_triangle_mesh(input_filename:str):
 
     return triangles
 
-def read_camera_properties():
+def read_camera_properties(config_name):
     cam_configs = configparser.ConfigParser()
     cam_configs.read("cam.properties")
 
-    N = alg.Coordinate(float(cam_configs["DEFAULT"]["Nx"]), 
-                   float(cam_configs["DEFAULT"]["Ny"]), 
-                   float(cam_configs["DEFAULT"]["Nz"]))
+    N = alg.Coordinate(float(cam_configs[config_name]["Nx"]), 
+                   float(cam_configs[config_name]["Ny"]), 
+                   float(cam_configs[config_name]["Nz"]))
 
-    V = alg.Coordinate(float(cam_configs["DEFAULT"]["Vx"]),
-                   float(cam_configs["DEFAULT"]["Vy"]),
-                   float(cam_configs["DEFAULT"]["Vz"]))
+    V = alg.Coordinate(float(cam_configs[config_name]["Vx"]),
+                   float(cam_configs[config_name]["Vy"]),
+                   float(cam_configs[config_name]["Vz"]))
     
-    C = alg.Coordinate(float(cam_configs["DEFAULT"]["Cx"]),
-                   float(cam_configs["DEFAULT"]["Cy"]),
-                   float(cam_configs["DEFAULT"]["Cz"]))
+    C = alg.Coordinate(float(cam_configs[config_name]["Cx"]),
+                   float(cam_configs[config_name]["Cy"]),
+                   float(cam_configs[config_name]["Cz"]))
     
-    d = float(cam_configs["DEFAULT"]["d"])
-    hx = float(cam_configs["DEFAULT"]["hx"])
-    hy = float(cam_configs["DEFAULT"]["hy"])
+    d = float(cam_configs[config_name]["d"])
+    hx = float(cam_configs[config_name]["hx"])
+    hy = float(cam_configs[config_name]["hy"])
 
     return Camera(N, V, d, hx, hy, C)
     

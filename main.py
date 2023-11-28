@@ -6,14 +6,18 @@ import os
 
 def draw_mesh(screen, mesh):
     for triangle in mesh:
-        pygame.draw.rect(screen,(255, 255, 255), (triangle.pointA.x, triangle.pointA.y, 2, 2))
-        pygame.draw.rect(screen,(255, 255, 255), (triangle.pointB.x, triangle.pointB.y, 2, 2))
-        pygame.draw.rect(screen,(255, 255, 255), (triangle.pointC.x, triangle.pointC.y, 2, 2))
+        #pygame.draw.rect(screen,(255, 255, 255), (triangle.pointA.x, triangle.pointA.y, 2, 2))
+        #pygame.draw.rect(screen,(255, 255, 255), (triangle.pointB.x, triangle.pointB.y, 2, 2))
+        #pygame.draw.rect(screen,(255, 255, 255), (triangle.pointC.x, triangle.pointC.y, 2, 2))
 
+        pygame.draw.line(screen, (255, 255, 255), (triangle.pointA.x, triangle.pointA.y), (triangle.pointA.x, triangle.pointA.y))
+        pygame.draw.line(screen, (255, 255, 255), (triangle.pointB.x, triangle.pointB.y), (triangle.pointB.x, triangle.pointB.y))
+        pygame.draw.line(screen, (255, 255, 255), (triangle.pointC.x, triangle.pointC.y), (triangle.pointC.x, triangle.pointC.y))
+        
 DATA_DIR = "./data"
 
 if __name__ == '__main__':
-    camera = read_camera_properties()
+    camera = read_camera_properties(config_name="VINICIUS-SUGGESTION")
     view = View(1366, 768)
 
     pygame.init()
