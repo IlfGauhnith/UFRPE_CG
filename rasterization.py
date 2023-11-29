@@ -14,7 +14,7 @@ def bresenham(triangle: Triangle) -> list[alg.Coordinate]:
     # Vertex C - A
     AC = bresenham_line(vertices[0], vertices[2])
     
-    return [*AB, *BC, *AC]
+    return [AB, BC, AC]
 
 def _plot_line_low(x0, y0, x1, y1):
     draw_coordinates = []
@@ -80,63 +80,49 @@ def bresenham_line(pointA, pointB) -> list[alg.Coordinate]:
         else:
             return _plot_line_high(x0, y0, x1, y1)
 
-def rasterize_flat_triangle(A, B, C):
-    print(A, B, C)
-
-    if B.y == A.y or C.y == A.y:
-        return [alg.Coordinate(0, 0)]
-    
-    # y is descending or ascending
-    ydir = math.copysign(1, B.y - A.y) # copysign returns 1 with (B.y - A.y)'s signal 
-    ydir = int(ydir)
-
-    # B is at a rightmost position than C.
-    if B.x > C.x:
-        B.x, C.x = C.x, B.x # Swaping. Note that y is the same.
-
-    # Find the inverse slope (dx/dy) for the two non-horizontal edges
-    invslope1 = ydir * (B.x - A.x) / (B.y - A.y)
-    invslope2 = ydir * (C.x - A.x) / (C.y - A.y)
-
-    curx1 = A.x + invslope1
-    curx2 = A.x + invslope2
+def _scan_sides(side_1, side_2):
     points = []
 
-    for y in range(A.y, B.y + ydir, ydir):
-        for x in range(round(curx1), round(curx2) + 1):
-            points.append(alg.Coordinate(x, y))
-        curx1 += invslope1
-        curx2 += invslope2
-    
+    for coordinateA in side_1:
+        for coordinateB in side_2:
+            if coordinateA == coordinateB:
+                continue
+
+            x0, y0 = coordinateA.x, coordinateA.y
+            x1, y1 = coordinateB.x, coordinateB.y
+
+            if y1 > y0:
+                break
+            elif y1 < y0:
+                continue
+
+            if x0 > x1:
+                x0, x1 = x1, x0
+
+            for x in range(x0, x1 + 1):
+                points.append(alg.Coordinate(x, y0))
+
     return points
 
 def scan_line_conversion(triangle: Triangle) -> list[alg.Coordinate]:
+    sides = bresenham(triangle)
+
+
+    AB = sides[0]
+    AB.sort(key=lambda x: x.y)
+
+    BC = sides[1]
+    BC.sort(key=lambda x: x.y)
+
+    AC = sides[2]
+    AC.sort(key=lambda x: x.y)
+
     points = []
-    
-    # Sort vertices using y coordinate as key. 
-    A, B, C = sorted([triangle.pointA, triangle.pointB, triangle.pointC], key=lambda p: p.y)
+    points.extend(_scan_sides(AB, AC))
 
-    # Check for triangles with horizontal edge
-    if B.y == C.y:
-        # Bottom is horizontal
-        print("bottom horizontal triangle")
-        points.extend(rasterize_flat_triangle(A, B, C))
-    elif A.y == B.y:
-        # Top is horizontal
-        print("top horizontal triangle")
-        points.extend(rasterize_flat_triangle(C, A, B))
-    else:
-        # D is the (x, y) coordinates which intersects AC.
-        D_x = round(A.x + (B.y - A.y) / (C.y - A.y) * (C.x - A.x))
-        D_y = B.y
-        D = alg.Coordinate(D_x, D_y)
-        
-        # Top triangle
-        print("top triangle")
-        points.extend(rasterize_flat_triangle(A, B, D))
+    if BC[-1] == AC[0]:
+        BC = BC[::-1]
 
-        # Bottom triangle
-        print("bottom triangle")
-        points.extend(rasterize_flat_triangle(C, B, D))
-    
+    points.extend(_scan_sides(BC, AC))
+
     return points

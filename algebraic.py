@@ -11,6 +11,12 @@ class Coordinate:
     def __str__(self) -> str:
         return f"Coordinate<x:{self.x}, y:{self.y}, z:{self.z}>" 
 
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Coordinate):
+            return self.x == other.x and self.y == other.y and self.z == other.z
+        
+        raise TypeError(f"Cannot compare equality between Coordinate with {type(other)}")
+    
     def __sub__(self, other):
         if isinstance(other, Coordinate):
             x_comp = self.x - other.x

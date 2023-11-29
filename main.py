@@ -15,6 +15,7 @@ def draw_solid_mesh(screen, mesh):
 def draw_line_mesh(screen, mesh):
     for triangle in mesh:
         draw_coordinates = bresenham(triangle)
+        draw_coordinates = [c for row in draw_coordinates for c in row]
 
         for coordinate in draw_coordinates:
             pygame.draw.line(screen, (255, 255, 255), (coordinate.x, coordinate.y), (coordinate.x, coordinate.y))
@@ -29,7 +30,7 @@ DATA_DIR = "./data"
 
 if __name__ == '__main__':
     camera = read_camera_properties(config_name="VINICIUS-SUGGESTION")
-    view = View(1366, 768)
+    view = View(1044, 1044)
 
     pygame.init()
     screen = pygame.display.set_mode((view.WIDTH, view.HEIGHT))
