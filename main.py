@@ -1,4 +1,4 @@
-from util import read_triangle_mesh, read_camera_properties, input_mesh_filename, project_mesh
+from util import read_triangle_mesh, read_camera_properties, input_mesh_filename, project_mesh, scan_line_conversion_triangle
 import pygame
 from model import View
 from logger import logger
@@ -6,14 +6,11 @@ import os
 
 def draw_mesh(screen, mesh):
     for triangle in mesh:
-        #pygame.draw.rect(screen,(255, 255, 255), (triangle.pointA.x, triangle.pointA.y, 2, 2))
-        #pygame.draw.rect(screen,(255, 255, 255), (triangle.pointB.x, triangle.pointB.y, 2, 2))
-        #pygame.draw.rect(screen,(255, 255, 255), (triangle.pointC.x, triangle.pointC.y, 2, 2))
+        draw_coordinates = scan_line_conversion_triangle(triangle)
 
-        pygame.draw.line(screen, (255, 255, 255), (triangle.pointA.x, triangle.pointA.y), (triangle.pointA.x, triangle.pointA.y))
-        pygame.draw.line(screen, (255, 255, 255), (triangle.pointB.x, triangle.pointB.y), (triangle.pointB.x, triangle.pointB.y))
-        pygame.draw.line(screen, (255, 255, 255), (triangle.pointC.x, triangle.pointC.y), (triangle.pointC.x, triangle.pointC.y))
-        
+        for coordinate in draw_coordinates:
+            pygame.draw.line(screen, (255, 255, 255), (coordinate.x, coordinate.y), (coordinate.x, coordinate.y))
+    
 DATA_DIR = "./data"
 
 if __name__ == '__main__':
