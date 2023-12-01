@@ -4,6 +4,7 @@ import pygame
 from model import View
 from logger import logger
 import os
+import sys
 
 def draw_solid_mesh(screen, mesh):
     for triangle in mesh:
@@ -29,18 +30,30 @@ def draw_vertex_mesh(screen, mesh):
 DATA_DIR = "./data"
 
 if __name__ == '__main__':
+    filename = sys.argv[1]
+
+    if filename not in os.listdir("./data"):
+        print(f"{filename} not found inside /data.")
+        exit()
+    
     camera = read_camera_properties(config_name="VINICIUS-SUGGESTION")
-    view = View(1044, 1044)
+    view = View(600, 600)
 
     pygame.init()
     screen = pygame.display.set_mode((view.WIDTH, view.HEIGHT))
-    pygame.display.set_caption("Wintermute 3D")
+    pygame.display.set_caption(f"Wintermute 3D {view.WIDTH}x{view.HEIGHT}")
+    
+    screen.fill((0, 0, 0))
+
+    mesh = read_triangle_mesh(input_filename=os.path.join(DATA_DIR, filename))
+    mesh = project_mesh(camera, view, mesh)
+    draw_solid_mesh(screen, mesh)
+    pygame.display.update()
 
     logger.debug(f"camera: {camera}")
     logger.debug(f"resolution: {view.WIDTH}x{view.HEIGHT}")
     running = True
     while running:
-        screen.fill((0, 0, 0))
         event = pygame.event.wait()
 
         if event.type == pygame.QUIT:
@@ -48,32 +61,19 @@ if __name__ == '__main__':
             break
 
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_l:
-                filename = input_mesh_filename()
-                mesh = read_triangle_mesh(input_filename=os.path.join(DATA_DIR, filename))
-                mesh = project_mesh(camera, view, mesh)
-                draw_solid_mesh(screen, mesh)
+            if event.key == pygame.K_1:       
+                screen.fill((0, 0, 0))     
+                draw_vertex_mesh(screen, mesh)
                 pygame.display.update()
 
-            elif event.key == pygame.K_1:
-                if mesh == None:
-                    print("There's no mesh loaded. Please first press 'l' and enter a mesh filename.")
-                else:
-                    draw_vertex_mesh(screen, mesh)
-                    pygame.display.update()
-
             elif event.key == pygame.K_2:
-                if mesh == None:
-                    print("There's no mesh loaded. Please first press 'l' and enter a mesh filename.")
-                else:
-                    draw_line_mesh(screen, mesh)
-                    pygame.display.update()
-            
+                screen.fill((0, 0, 0))
+                draw_line_mesh(screen, mesh)
+                pygame.display.update()
+
             elif event.key == pygame.K_3:
-                if mesh == None:
-                    print("There's no mesh loaded. Please first press 'l' and enter a mesh filename.")
-                else:
-                    draw_solid_mesh(screen, mesh)
-                    pygame.display.update()
+                screen.fill((0, 0, 0))
+                draw_solid_mesh(screen, mesh)
+                pygame.display.update()
                 
     pygame.quit()
