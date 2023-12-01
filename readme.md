@@ -1,5 +1,6 @@
 # UFRPE_CG
-Projeto de conclusão da disciplina Computação Gráfica Básica.  
+Projeto de conclusão da disciplina Computação Gráfica Básica.
+![](static/animation.gif)
 ## Especificação
 Carregar na memória uma malha de triângulos referente a um objeto 3D armazenada em
 arquivo de texto e desenhar seus vértices na tela. O arquivo utilizado para armazenar uma
