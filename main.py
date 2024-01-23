@@ -1,4 +1,4 @@
-from util import read_triangle_mesh, read_camera_properties, input_mesh_filename, project_mesh
+from util import read_triangle_mesh, read_camera_properties, read_light_properties, input_mesh_filename, project_mesh
 from rasterization import bresenham, scan_line_conversion
 import pygame
 from model import View
@@ -36,7 +36,8 @@ if __name__ == '__main__':
         print(f"{filename} not found inside /data.")
         exit()
     
-    camera = read_camera_properties(config_name="VINICIUS-SUGGESTION")
+    camera = read_camera_properties(config_name="2VA")
+    light = read_light_properties("2VA")
     view = View(600, 600)
 
     pygame.init()
@@ -51,6 +52,7 @@ if __name__ == '__main__':
     pygame.display.update()
 
     logger.debug(f"camera: {camera}")
+    logger.debug(f"light: {light}")
     logger.debug(f"resolution: {view.WIDTH}x{view.HEIGHT}")
     running = True
     while running:

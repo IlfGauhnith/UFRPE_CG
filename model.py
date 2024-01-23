@@ -11,6 +11,21 @@ class Triangle:
     def __str__(self) -> str:
         return f"Triangle<A:{self.pointA}, B:{self.pointB}, C:{self.pointC}>"
 
+class Light:
+    
+    def __init__(self, ambiental:tuple[int, int, int], ambiental_coef:float, light_color:tuple[int, int, int], location:alg.Coordinate, diffuse_coef:tuple[float, float, float], diffuse_color:tuple[float, float, float], specular_coef:float, theta:int):
+        self.ambiental = ambiental              # Iamb
+        self.ambiental_coef = ambiental_coef    # Ka
+        self.light_color = light_color          # Il
+        self.location = location                # Pl
+        self.diffuse_coef = diffuse_coef        # Kd
+        self.diffuse_color = diffuse_color      # Od
+        self.specular_coef = specular_coef      # Ks
+        self.theta = theta                      # η
+
+    def __str__(self) -> str:
+        return f"Camera<ambiental:{self.ambiental}, ambiental_coef:{self.ambiental_coef}, light_color:{self.light_color}, location:{self.location}, diffuse_coef:{self.diffuse_coef}, diffuse_color:{self.diffuse_color}, specular_coef:{self.specular_coef}, theta:{self.theta}>"
+
 class Camera:
 
     def __init__(self, N:alg.Coordinate, V:alg.Coordinate, d:float, hx:float, hy:float, C:alg.Coordinate) -> None:

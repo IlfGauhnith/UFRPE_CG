@@ -1,5 +1,5 @@
 import algebraic as alg
-from model import Camera, Triangle
+from model import Camera, Triangle, Light
 import configparser
 import os
 from logger import logger
@@ -60,7 +60,39 @@ def read_camera_properties(config_name):
     hy = float(cam_configs[config_name]["hy"])
 
     return Camera(N, V, d, hx, hy, C)
+
+def read_light_properties(config_name):
+    light_configs = configparser.ConfigParser()
+    light_configs.read("light.properties")
+
+    ambiental = (int(light_configs[config_name]["Iambr"]),
+                int(light_configs[config_name]["Iambg"]),
+                int(light_configs[config_name]["Iambb"]))
     
+    ambiental_coef = float(light_configs[config_name]["Ka"])
+
+    light_color = (int(light_configs[config_name]["Ilr"]),
+                int(light_configs[config_name]["Ilg"]),
+                int(light_configs[config_name]["Ilb"]))
+
+    location = alg.Coordinate(float(light_configs[config_name]["Plx"]),
+                float(light_configs[config_name]["Ply"]),
+                float(light_configs[config_name]["Plz"]))
+    
+    diffuse_coef = (float(light_configs[config_name]["Kdr"]),
+                float(light_configs[config_name]["Kdg"]),
+                float(light_configs[config_name]["Kdb"]))
+
+    diffuse_color = (float(light_configs[config_name]["Odr"]),
+                float(light_configs[config_name]["Odg"]),
+                float(light_configs[config_name]["Odb"]))
+
+    specular_coef = float(light_configs[config_name]["Ks"])
+
+    theta = int(light_configs[config_name]["Theta"])
+
+    return Light(ambiental, ambiental_coef, light_color, location, diffuse_coef, diffuse_color, specular_coef, theta)
+
 def input_mesh_filename():
     while True:
         user = input("Mesh filename with extension: ")
