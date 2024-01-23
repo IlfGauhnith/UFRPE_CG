@@ -1,4 +1,4 @@
-from util import read_triangle_mesh, read_camera_properties, read_light_properties, input_mesh_filename, project_mesh
+from util import read_triangle_mesh, read_camera_properties, read_light_properties, input_mesh_filename, camera_project_mesh, screen_project_mesh
 from rasterization import bresenham, scan_line_conversion
 import pygame
 from model import View
@@ -47,8 +47,10 @@ if __name__ == '__main__':
     screen.fill((0, 0, 0))
 
     mesh = read_triangle_mesh(input_filename=os.path.join(DATA_DIR, filename))
-    mesh = project_mesh(camera, view, mesh)
-    draw_solid_mesh(screen, mesh)
+    camera_projected_mesh = camera_project_mesh(camera, mesh)
+    screen_mesh = screen_project_mesh(view, mesh)
+
+    draw_solid_mesh(screen, screen_mesh)
     pygame.display.update()
 
     logger.debug(f"camera: {camera}")
@@ -65,17 +67,17 @@ if __name__ == '__main__':
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_1:       
                 screen.fill((0, 0, 0))     
-                draw_vertex_mesh(screen, mesh)
+                draw_vertex_mesh(screen, screen_mesh)
                 pygame.display.update()
 
             elif event.key == pygame.K_2:
                 screen.fill((0, 0, 0))
-                draw_line_mesh(screen, mesh)
+                draw_line_mesh(screen, screen_mesh)
                 pygame.display.update()
 
             elif event.key == pygame.K_3:
                 screen.fill((0, 0, 0))
-                draw_solid_mesh(screen, mesh)
+                draw_solid_mesh(screen, screen_mesh)
                 pygame.display.update()
                 
     pygame.quit()

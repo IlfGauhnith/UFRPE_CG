@@ -102,11 +102,23 @@ def input_mesh_filename():
         else:
             return user
 
-def project_mesh(camera, view, mesh):
+def camera_project_mesh(camera, mesh):
     for idx, triangle in enumerate(mesh):
-        pointA = alg.camera_perspective_projection(camera, view, triangle.pointA)
-        pointB = alg.camera_perspective_projection(camera, view, triangle.pointB)
-        pointC = alg.camera_perspective_projection(camera, view, triangle.pointC)
+        pointA = alg.camera_perspective_projection(camera, triangle.pointA)
+        pointB = alg.camera_perspective_projection(camera, triangle.pointB)
+        pointC = alg.camera_perspective_projection(camera, triangle.pointC)
+        
+        pp_triangle = Triangle(pointA, pointB, pointC) 
+        logger.debug(f"{triangle} => {pp_triangle}")
+        mesh[idx] = pp_triangle
+    
+    return mesh
+
+def screen_project_mesh(view, mesh):
+    for idx, triangle in enumerate(mesh):
+        pointA = alg.screen_projection(view, triangle.pointA)
+        pointB = alg.screen_projection(view, triangle.pointB)
+        pointC = alg.screen_projection(view, triangle.pointC)
         
         pp_triangle = Triangle(pointA, pointB, pointC) 
         logger.debug(f"{triangle} => {pp_triangle}")

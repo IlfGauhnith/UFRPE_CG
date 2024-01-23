@@ -75,7 +75,7 @@ def is_orthogonal(V:Coordinate, U:Coordinate) -> bool:
     prod = abs(V * U)
     return 0 <= prod <= 1e-10
 
-def camera_perspective_projection(cam, view, p_univ:Coordinate):
+def camera_perspective_projection(cam, p_univ:Coordinate):
     p_c_distance = p_univ - cam.C
     
     x_comp = cam.U * p_c_distance
@@ -91,10 +91,13 @@ def camera_perspective_projection(cam, view, p_univ:Coordinate):
     p_norm = Coordinate(x_comp, y_comp)
     logger.debug(f"projected {p_proj} => normalized {p_norm}")
 
-    i_comp = math.floor(((p_norm.x + 1)/2) * view.WIDTH + 0.5)
-    j_comp = math.floor(view.HEIGHT - ((p_norm.y + 1)/2) * view.HEIGHT + 0.5)
+    return p_norm
 
-    p_view = Coordinate(i_comp, j_comp)
-    logger.debug(f"normalized {p_norm} => view {p_view}")
+def screen_projection(view, p_view):
+    i_comp = math.floor(((p_view.x + 1)/2) * view.WIDTH + 0.5)
+    j_comp = math.floor(view.HEIGHT - ((p_view.y + 1)/2) * view.HEIGHT + 0.5)
 
-    return p_view
+    p_screen = Coordinate(i_comp, j_comp)
+    logger.debug(f"normalized {p_view} => view {p_screen}")
+
+    return p_screen
