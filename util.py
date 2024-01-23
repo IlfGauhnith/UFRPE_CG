@@ -114,11 +114,11 @@ def camera_project_mesh(camera, mesh):
     
     return mesh
 
-def screen_project_mesh(view, mesh):
+def screen_project_mesh(view, cam, mesh):
     for idx, triangle in enumerate(mesh):
-        pointA = alg.screen_projection(view, triangle.pointA)
-        pointB = alg.screen_projection(view, triangle.pointB)
-        pointC = alg.screen_projection(view, triangle.pointC)
+        pointA = alg.screen_projection(view, cam, triangle.pointA)
+        pointB = alg.screen_projection(view, cam, triangle.pointB)
+        pointC = alg.screen_projection(view, cam, triangle.pointC)
         
         pp_triangle = Triangle(pointA, pointB, pointC, triangle.normal) 
         logger.debug(f"{triangle} => {pp_triangle}")
