@@ -101,3 +101,13 @@ def screen_projection(view, p_view):
     logger.debug(f"normalized {p_view} => view {p_screen}")
 
     return p_screen
+
+def calculate_surface_normal(triangle):
+    U = triangle.pointB - triangle.pointA
+    V = triangle.pointC - triangle.pointA
+
+    x_comp = U.y * V.z - U.z * V.y
+    y_comp = U.z * V.x - U.x * V.z
+    z_comp = U.x * V.y - U.y * V.x
+
+    return normalize(Coordinate(x_comp, y_comp, z_comp))

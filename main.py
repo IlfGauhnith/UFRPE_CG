@@ -1,4 +1,4 @@
-from util import read_triangle_mesh, read_camera_properties, read_light_properties, input_mesh_filename, camera_project_mesh, screen_project_mesh
+from util import read_triangle_mesh, read_camera_properties, read_light_properties, input_mesh_filename, camera_project_mesh, screen_project_mesh, compute_normal
 from rasterization import bresenham, scan_line_conversion
 import pygame
 from model import View
@@ -28,12 +28,18 @@ def draw_vertex_mesh(screen, mesh):
         pygame.draw.line(screen, (255, 255, 255), (triangle.pointC.x, triangle.pointC.y), (triangle.pointC.x, triangle.pointC.y))
  
 DATA_DIR = "./data"
+TONAL_MODES = ["--flat"]
 
 if __name__ == '__main__':
     filename = sys.argv[1]
+    tonal_mode = sys.argv[2]
 
     if filename not in os.listdir("./data"):
         print(f"{filename} not found inside /data.")
+        exit()
+    
+    if tonal_mode not in TONAL_MODES:
+        print(f"Incorrect tonalization model flag: {tonal_mode}.\n Please use one of these flags instead: {TONAL_MODES}")
         exit()
     
     camera = read_camera_properties(config_name="2VA")
@@ -48,7 +54,8 @@ if __name__ == '__main__':
 
     mesh = read_triangle_mesh(input_filename=os.path.join(DATA_DIR, filename))
     camera_projected_mesh = camera_project_mesh(camera, mesh)
-    screen_mesh = screen_project_mesh(view, mesh)
+    compute_normal(camera_projected_mesh, tonal_mode)
+    screen_mesh = screen_project_mesh(view, camera_projected_mesh)
 
     draw_solid_mesh(screen, screen_mesh)
     pygame.display.update()

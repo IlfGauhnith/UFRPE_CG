@@ -120,8 +120,14 @@ def screen_project_mesh(view, mesh):
         pointB = alg.screen_projection(view, triangle.pointB)
         pointC = alg.screen_projection(view, triangle.pointC)
         
-        pp_triangle = Triangle(pointA, pointB, pointC) 
+        pp_triangle = Triangle(pointA, pointB, pointC, triangle.normal) 
         logger.debug(f"{triangle} => {pp_triangle}")
         mesh[idx] = pp_triangle
     
     return mesh
+
+def compute_normal(mesh, tonalization_model:str):
+    if tonalization_model == "--flat":
+        for idx, triangle in enumerate(mesh):
+            triangle.normal = alg.calculate_surface_normal(triangle)
+            logger.debug(f"normal computed: {triangle}")

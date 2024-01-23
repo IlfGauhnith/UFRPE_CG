@@ -3,13 +3,14 @@ import algebraic as alg
 
 class Triangle:
     
-    def __init__(self, pointA:alg.Coordinate, pointB:alg.Coordinate, pointC:alg.Coordinate) -> None:
+    def __init__(self, pointA:alg.Coordinate, pointB:alg.Coordinate, pointC:alg.Coordinate, normal:alg.Coordinate=None) -> None:
         self.pointA = pointA
         self.pointB = pointB
         self.pointC = pointC
+        self.normal = normal
 
     def __str__(self) -> str:
-        return f"Triangle<A:{self.pointA}, B:{self.pointB}, C:{self.pointC}>"
+        return f"Triangle<A:{self.pointA}, B:{self.pointB}, C:{self.pointC}, Normal:{self.normal}>"
 
 class Light:
     
