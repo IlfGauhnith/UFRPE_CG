@@ -47,6 +47,29 @@ A aplicação lê os parâmetros da câmera virtual do arquivo `cam.properties`.
 | hx | numérico | Largura do retângulo de vista.
 | hy | numérico | Altura do retângulo de vista.
 
+A iluminação é calculada utilizando o modelo de iluminação de Phong. A aplicação lê os parâmetros de iluminação do arquivo `light.properties`
+### light.properties
+| propriedade | tipo | descrição |
+| :---: | :---: | :--- |
+| Iambr | numérico | Componente vermelha da cor de luz ambiental.
+| Iambg | numérico | Componente verde da cor de luz ambiental.
+| Iambb | numérico | Componente azul da cor de luz ambiental.
+| Ka | numérico | Coeficiente de iluminação ambiental.
+| Ilr | numérico | Componente vermelha da cor da luz.
+| Ilg | numérico | Componente verde da cor da luz.
+| Ilb | numérico | Componente azul da cor da luz.
+| Plx | numérico | Componente x do ponto da luz.
+| Ply | numérico | Componente y do ponto da luz.
+| Plz | numérico | Componente z do ponto da luz.
+| Kdr | numérico | Componente vermelha do coeficiente de iluminação difusa.
+| Kdg | numérico | Componente verde do coeficiente de iluminação difusa.
+| Kdb | numérico | Componente azul do coeficiente de iluminação difusa.
+| Odr | numérico | Componente vermelha da cor difusa do objeto.
+| Odb | numérico | Componente verde da cor difusa do objeto.
+| Odg | numérico | Componente azul da cor difusa do objeto.
+| Ka | numérico | Coeficiente especular.
+| Theta | numérico | Modela o foco especular.
+
 ## Instalação
 Desenvolvido em Python 3.10.12  
 pygame 2.5.2
