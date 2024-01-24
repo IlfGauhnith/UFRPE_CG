@@ -3,19 +3,21 @@ from logger import logger
 
 class Coordinate:
     
-    def __init__(self, x:float, y:float, z=0.0) -> None:
+    def __init__(self, x:float, y:float, z=0.0, normal=None) -> None:
         self.x = x
         self.y = y
         self.z = z
+        self.triangles = []
+        self.normal = normal
 
     def __str__(self) -> str:
-        return f"Coordinate<x:{self.x}, y:{self.y}, z:{self.z}>" 
+        return f"Coordinate<x:{self.x}, y:{self.y}, z:{self.z}, normal:{self.normal}>" 
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Coordinate):
             return self.x == other.x and self.y == other.y and self.z == other.z
         
-        raise TypeError(f"Cannot compare equality between Coordinate with {type(other)}")
+        raise TypeError(f"Cannot compare equality between Coordinate and {type(other)}")
     
     def __sub__(self, other):
         if isinstance(other, Coordinate):
@@ -27,6 +29,16 @@ class Coordinate:
         
         raise TypeError(f"Cannot subtract a vector Coordinate with {type(other)}")
 
+    def __add__(self, other):
+        if isinstance(other, Coordinate):
+            x_comp = self.x + other.x
+            y_comp = self.y + other.y
+            z_comp = self.z + other.z
+
+            return Coordinate(x_comp, y_comp, z_comp)
+        
+        raise TypeError(f"Cannot add a vector Coordinate with {type(other)}")
+    
     def __mul__(self, other):
         
         if isinstance(other, Coordinate):
@@ -83,7 +95,6 @@ def camera_perspective_projection(cam, p_univ:Coordinate):
     z_comp = cam.N * p_c_distance
 
     p_proj = Coordinate(x_comp, y_comp, z_comp)
-    logger.debug(f"universal {p_univ} => projected {p_proj}")
 
     return p_proj
 
@@ -92,22 +103,29 @@ def screen_projection(view, cam, p_proj):
     y_comp = (cam.d / cam.hy) * (p_proj.y / p_proj.z)
 
     p_norm = Coordinate(x_comp, y_comp)
-    logger.debug(f"projected {p_proj} => normalized {p_norm}")
 
     i_comp = math.floor(((p_norm.x + 1)/2) * view.WIDTH + 0.5)
     j_comp = math.floor(view.HEIGHT - ((p_norm.y + 1)/2) * view.HEIGHT + 0.5)
 
     p_screen = Coordinate(i_comp, j_comp)
-    logger.debug(f"normalized {p_norm} => view {p_screen}")
 
     return p_screen
 
 def calculate_surface_normal(triangle):
-    U = triangle.pointB - triangle.pointA
-    V = triangle.pointC - triangle.pointA
+    U = triangle.projection_pointB - triangle.projection_pointA
+    V = triangle.projection_pointC - triangle.projection_pointA
 
     x_comp = U.y * V.z - U.z * V.y
     y_comp = U.z * V.x - U.x * V.z
     z_comp = U.x * V.y - U.y * V.x
     
     return normalize(Coordinate(x_comp, y_comp, z_comp))
+
+def calculate_point_normal(point:Coordinate):
+    norm_triangles = [triangle.normal for triangle in point.triangles]
+    
+    sumup = Coordinate(0, 0, 0)
+    for norm in norm_triangles:
+        sumup += norm
+    
+    return normalize(sumup)

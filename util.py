@@ -31,11 +31,19 @@ def read_triangle_mesh(input_filename:str):
                   [line.strip().split(" ") for line in lines[0:n_vertex]]]
         lines = lines[n_vertex:] # slicing out vertex data
 
-        triangles = [Triangle( vertex[coordinate_index[0] - 1], vertex[coordinate_index[1] - 1], vertex[coordinate_index[2] - 1] )
-                     for coordinate_index in 
-                     [( int(line[0]), int(line[1]), int(line[2]) )
-                     for line in
-                     [line.strip().split(" ") for line in lines]]]
+        triangles = []
+        for coordinate_index in [( int(line[0]), int(line[1]), int(line[2]) ) for line in [line.strip().split(" ") for line in lines]]:
+            vertexA = vertex[coordinate_index[0] - 1]
+            vertexB = vertex[coordinate_index[1] - 1]
+            vertexC = vertex[coordinate_index[2] - 1]
+
+            triangle = Triangle(vertexA, vertexB, vertexC)
+
+            vertexA.triangles.append(triangle)
+            vertexB.triangles.append(triangle)
+            vertexC.triangles.append(triangle)
+
+            triangles.append(triangle)
 
     return triangles
 
@@ -103,31 +111,41 @@ def input_mesh_filename():
             return user
 
 def camera_project_mesh(camera, mesh):
-    for idx, triangle in enumerate(mesh):
-        pointA = alg.camera_perspective_projection(camera, triangle.pointA)
-        pointB = alg.camera_perspective_projection(camera, triangle.pointB)
-        pointC = alg.camera_perspective_projection(camera, triangle.pointC)
-        
-        pp_triangle = Triangle(pointA, pointB, pointC) 
-        logger.debug(f"{triangle} => {pp_triangle}")
-        mesh[idx] = pp_triangle
-    
+    for triangle in mesh:
+        triangle.projection_pointA = alg.camera_perspective_projection(camera, triangle.universal_pointA)
+        triangle.projection_pointB = alg.camera_perspective_projection(camera, triangle.universal_pointB)
+        triangle.projection_pointC = alg.camera_perspective_projection(camera, triangle.universal_pointC)
+
+        triangle.projection_pointA.triangles.append(triangle)
+        triangle.projection_pointB.triangles.append(triangle)
+        triangle.projection_pointC.triangles.append(triangle)
+
     return mesh
 
 def screen_project_mesh(view, cam, mesh):
-    for idx, triangle in enumerate(mesh):
-        pointA = alg.screen_projection(view, cam, triangle.pointA)
-        pointB = alg.screen_projection(view, cam, triangle.pointB)
-        pointC = alg.screen_projection(view, cam, triangle.pointC)
-        
-        pp_triangle = Triangle(pointA, pointB, pointC, triangle.normal) 
-        logger.debug(f"{triangle} => {pp_triangle}")
-        mesh[idx] = pp_triangle
-    
+    for triangle in mesh:
+        triangle.screen_pointA = alg.screen_projection(view, cam, triangle.projection_pointA)
+        triangle.screen_pointB = alg.screen_projection(view, cam, triangle.projection_pointB)
+        triangle.screen_pointC = alg.screen_projection(view, cam, triangle.projection_pointC)
+
+        triangle.screen_pointA.triangles.append(triangle)
+        triangle.screen_pointB.triangles.append(triangle)
+        triangle.screen_pointC.triangles.append(triangle)
+
+        logger.debug(f"{triangle}")
+
     return mesh
 
 def compute_normal(mesh, tonalization_model:str):
     if tonalization_model == "--flat":
-        for idx, triangle in enumerate(mesh):
+        for triangle in mesh:
             triangle.normal = alg.calculate_surface_normal(triangle)
-            logger.debug(f"normal computed: {triangle}")
+    
+    elif tonalization_model == "--gouraud":
+        for triangle in mesh:
+            triangle.normal = alg.calculate_surface_normal(triangle)
+
+        for triangle in mesh:    
+            triangle.projection_pointA.normal = alg.calculate_point_normal(triangle.projection_pointA)
+            triangle.projection_pointB.normal = alg.calculate_point_normal(triangle.projection_pointB)
+            triangle.projection_pointC.normal = alg.calculate_point_normal(triangle.projection_pointC)

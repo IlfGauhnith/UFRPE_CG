@@ -23,12 +23,12 @@ def draw_line_mesh(screen, mesh):
 
 def draw_vertex_mesh(screen, mesh):
     for triangle in mesh:
-        pygame.draw.line(screen, (255, 255, 255), (triangle.pointA.x, triangle.pointA.y), (triangle.pointA.x, triangle.pointA.y))
-        pygame.draw.line(screen, (255, 255, 255), (triangle.pointB.x, triangle.pointB.y), (triangle.pointB.x, triangle.pointB.y))
-        pygame.draw.line(screen, (255, 255, 255), (triangle.pointC.x, triangle.pointC.y), (triangle.pointC.x, triangle.pointC.y))
+        pygame.draw.line(screen, (255, 255, 255), (triangle.screen_pointA.x, triangle.screen_pointA.y), (triangle.screen_pointA.x, triangle.screen_pointA.y))
+        pygame.draw.line(screen, (255, 255, 255), (triangle.screen_pointB.x, triangle.screen_pointB.y), (triangle.screen_pointB.x, triangle.screen_pointB.y))
+        pygame.draw.line(screen, (255, 255, 255), (triangle.screen_pointC.x, triangle.screen_pointC.y), (triangle.screen_pointC.x, triangle.screen_pointC.y))
  
 DATA_DIR = "./data"
-TONAL_MODES = ["--flat"]
+TONAL_MODES = ["--flat", "--gouraud"]
 
 if __name__ == '__main__':
     filename = sys.argv[1]
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     mesh = read_triangle_mesh(input_filename=os.path.join(DATA_DIR, filename))
     camera_projected_mesh = camera_project_mesh(camera, mesh)
     compute_normal(camera_projected_mesh, tonal_mode)
-    screen_mesh = screen_project_mesh(view, camera_projected_mesh)
+    screen_mesh = screen_project_mesh(view, camera, camera_projected_mesh)
 
     draw_solid_mesh(screen, screen_mesh)
     pygame.display.update()

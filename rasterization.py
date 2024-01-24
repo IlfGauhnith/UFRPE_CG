@@ -4,7 +4,7 @@ import math
 
 def bresenham(triangle: Triangle) -> list[alg.Coordinate]:
     # Sort vertices using y coordinate as key. 
-    vertices = sorted([triangle.pointA, triangle.pointB, triangle.pointC], key=lambda p: p.y)
+    vertices = sorted([triangle.screen_pointA, triangle.screen_pointB, triangle.screen_pointC], key=lambda p: p.y)
 
     # Drawing lines
     # Vertex A - B
@@ -100,7 +100,8 @@ def _scan_sides(side_1, side_2):
                 x0, x1 = x1, x0
 
             for x in range(x0, x1 + 1):
-                points.append(alg.Coordinate(x, y0))
+                point = alg.Coordinate(x, y0)
+                points.append(point)
 
     return points
 

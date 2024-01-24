@@ -4,13 +4,22 @@ import algebraic as alg
 class Triangle:
     
     def __init__(self, pointA:alg.Coordinate, pointB:alg.Coordinate, pointC:alg.Coordinate, normal:alg.Coordinate=None) -> None:
-        self.pointA = pointA
-        self.pointB = pointB
-        self.pointC = pointC
+        self.universal_pointA = pointA
+        self.universal_pointB = pointB
+        self.universal_pointC = pointC
+        
+        self.projection_pointA = None
+        self.projection_pointB = None
+        self.projection_pointC = None
+        
+        self.screen_pointA = None
+        self.screen_pointB = None
+        self.screen_pointC = None
+
         self.normal = normal
 
     def __str__(self) -> str:
-        return f"Triangle<A:{self.pointA}, B:{self.pointB}, C:{self.pointC}, Normal:{self.normal}>"
+        return f"Triangle<universal_pointA:{self.universal_pointA}, universal_pointB:{self.universal_pointB}, universal_pointC:{self.universal_pointC}, projection_pointA:{self.projection_pointA}, projection_pointB:{self.projection_pointB}, projection_pointC:{self.projection_pointC}, screen_pointA:{self.screen_pointA}, screen_pointB:{self.screen_pointB}, screen_pointC:{self.screen_pointC}, Normal:{self.normal}>"
 
 class Light:
     
@@ -25,7 +34,7 @@ class Light:
         self.theta = theta                      # η
 
     def __str__(self) -> str:
-        return f"Camera<ambiental:{self.ambiental}, ambiental_coef:{self.ambiental_coef}, light_color:{self.light_color}, location:{self.location}, diffuse_coef:{self.diffuse_coef}, diffuse_color:{self.diffuse_color}, specular_coef:{self.specular_coef}, theta:{self.theta}>"
+        return f"Light<ambiental:{self.ambiental}, ambiental_coef:{self.ambiental_coef}, light_color:{self.light_color}, location:{self.location}, diffuse_coef:{self.diffuse_coef}, diffuse_color:{self.diffuse_color}, specular_coef:{self.specular_coef}, theta:{self.theta}>"
 
 class Camera:
 
