@@ -122,11 +122,22 @@ def calculate_surface_normal(triangle):
     
     return normalize(Coordinate(x_comp, y_comp, z_comp))
 
-def calculate_point_normal(point:Coordinate):
-    norm_triangles = [triangle.normal for triangle in point.triangles]
+def calculate_vertex_normal(vertex:Coordinate):
+    norm_triangles = [triangle.normal for triangle in vertex.triangles]
     
     sumup = Coordinate(0, 0, 0)
     for norm in norm_triangles:
         sumup += norm
     
     return normalize(sumup)
+
+def calculate_barycentric_coordinates(triangle):
+    vertex_A = triangle.projection_pointA
+    vertex_B = triangle.projection_pointB
+    vertex_C = triangle.projection_pointC
+
+    alfa = (vertex_A.x + vertex_B.x + vertex_C.x) / 3
+    beta = (vertex_A.y + vertex_B.y + vertex_C.y) / 3
+    gama = (vertex_A.z + vertex_B.z + vertex_C.z) / 3
+
+    triangle.baricentric_coordinates = Coordinate(alfa, beta, gama)

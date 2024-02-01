@@ -1,4 +1,4 @@
-from util import read_triangle_mesh, read_camera_properties, read_light_properties, camera_project_mesh, screen_project_mesh
+from util import read_triangle_mesh, read_camera_properties, read_light_properties, camera_project_mesh, screen_project_mesh, compute_barycentric_coordinates
 from rasterization import bresenham, scan_line_conversion
 from shading import phong_shading, compute_normal
 import pygame
@@ -7,20 +7,20 @@ from logger import logger
 import os
 import sys
 
-def draw_phong_shaded_mesh(screen, mesh):
+def draw_phong_shaded_mesh(screen, mesh, tonalization_model):
     for triangle in mesh:
         scan_line_conversion(triangle)
-        phong_shading(triangle)
+        phong_shading(triangle, tonalization_model)
 
         for pixel in triangle.pixels:
             pygame.draw.line(screen, pixel.color, (pixel.x, pixel.y), (pixel.x, pixel.y))
 
 def draw_solid_mesh(screen, mesh):
     for triangle in mesh:
-        draw_coordinates = scan_line_conversion(triangle)
+        scan_line_conversion(triangle)
 
-        for coordinate in draw_coordinates:
-            pygame.draw.line(screen, (255, 255, 255), (coordinate.x, coordinate.y), (coordinate.x, coordinate.y))
+        for pixel in triangle.pixels:
+            pygame.draw.line(screen, (255, 255, 255), (pixel.x, pixel.y), (pixel.x, pixel.y))
 
 def draw_line_mesh(screen, mesh):
     for triangle in mesh:
@@ -64,6 +64,7 @@ if __name__ == '__main__':
     mesh = read_triangle_mesh(input_filename=os.path.join(DATA_DIR, filename))
     camera_projected_mesh = camera_project_mesh(camera, mesh)
     compute_normal(camera_projected_mesh, tonal_mode)
+    compute_barycentric_coordinates(camera_projected_mesh)
     screen_mesh = screen_project_mesh(view, camera, camera_projected_mesh)
 
     draw_solid_mesh(screen, screen_mesh)
@@ -98,7 +99,7 @@ if __name__ == '__main__':
 
             elif event.key == pygame.K_4:
                 screen.fill((0, 0, 0))
-                draw_phong_shaded_mesh(screen, screen_mesh)                
+                draw_phong_shaded_mesh(screen, screen_mesh, tonal_mode)                
                 pygame.display.update()
                 
     pygame.quit()
