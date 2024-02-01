@@ -1,10 +1,19 @@
-from util import read_triangle_mesh, read_camera_properties, read_light_properties, input_mesh_filename, camera_project_mesh, screen_project_mesh, compute_normal
+from util import read_triangle_mesh, read_camera_properties, read_light_properties, camera_project_mesh, screen_project_mesh
 from rasterization import bresenham, scan_line_conversion
+from shading import phong_shading, compute_normal
 import pygame
 from model import View
 from logger import logger
 import os
 import sys
+
+def draw_phong_shaded_mesh(screen, mesh):
+    for triangle in mesh:
+        scan_line_conversion(triangle)
+        phong_shading(triangle)
+
+        for pixel in triangle.pixels:
+            pygame.draw.line(screen, pixel.color, (pixel.x, pixel.y), (pixel.x, pixel.y))
 
 def draw_solid_mesh(screen, mesh):
     for triangle in mesh:
@@ -85,6 +94,11 @@ if __name__ == '__main__':
             elif event.key == pygame.K_3:
                 screen.fill((0, 0, 0))
                 draw_solid_mesh(screen, screen_mesh)
+                pygame.display.update()
+
+            elif event.key == pygame.K_4:
+                screen.fill((0, 0, 0))
+                draw_phong_shaded_mesh(screen, screen_mesh)                
                 pygame.display.update()
                 
     pygame.quit()

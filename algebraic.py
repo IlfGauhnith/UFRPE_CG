@@ -3,12 +3,13 @@ from logger import logger
 
 class Coordinate:
     
-    def __init__(self, x:float, y:float, z=0.0, normal=None) -> None:
+    def __init__(self, x:float, y:float, z=0.0, normal=None, color=(255, 255, 255)) -> None:
         self.x = x
         self.y = y
         self.z = z
         self.triangles = []
         self.normal = normal
+        self.color = color
 
     def __str__(self) -> str:
         return f"Coordinate<x:{self.x}, y:{self.y}, z:{self.z}, normal:{self.normal}>" 

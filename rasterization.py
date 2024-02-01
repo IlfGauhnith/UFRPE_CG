@@ -126,4 +126,5 @@ def scan_line_conversion(triangle: Triangle) -> list[alg.Coordinate]:
 
     points.extend(_scan_sides(BC, AC))
 
+    triangle.pixels.extend(points)
     return points

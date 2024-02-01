@@ -17,6 +17,7 @@ class Triangle:
         self.screen_pointC = None
 
         self.normal = normal
+        self.pixels = []
 
     def __str__(self) -> str:
         return f"Triangle<universal_pointA:{self.universal_pointA}, universal_pointB:{self.universal_pointB}, universal_pointC:{self.universal_pointC}, projection_pointA:{self.projection_pointA}, projection_pointB:{self.projection_pointB}, projection_pointC:{self.projection_pointC}, screen_pointA:{self.screen_pointA}, screen_pointB:{self.screen_pointB}, screen_pointC:{self.screen_pointC}, Normal:{self.normal}>"
