@@ -47,25 +47,51 @@ A aplicação lê os parâmetros da câmera virtual do arquivo `cam.properties`.
 | hx | numérico | Largura do retângulo de vista.
 | hy | numérico | Altura do retângulo de vista.
 
+A iluminação é calculada utilizando o modelo de iluminação de Phong. A aplicação lê os parâmetros de iluminação do arquivo `light.properties`
+### light.properties
+| propriedade | tipo | descrição |
+| :---: | :---: | :--- |
+| Iambr | numérico | Componente vermelha da cor de luz ambiental.
+| Iambg | numérico | Componente verde da cor de luz ambiental.
+| Iambb | numérico | Componente azul da cor de luz ambiental.
+| Ka | numérico | Coeficiente de iluminação ambiental.
+| Ilr | numérico | Componente vermelha da cor da luz.
+| Ilg | numérico | Componente verde da cor da luz.
+| Ilb | numérico | Componente azul da cor da luz.
+| Plx | numérico | Componente x do ponto da luz.
+| Ply | numérico | Componente y do ponto da luz.
+| Plz | numérico | Componente z do ponto da luz.
+| Kdr | numérico | Componente vermelha do coeficiente de iluminação difusa.
+| Kdg | numérico | Componente verde do coeficiente de iluminação difusa.
+| Kdb | numérico | Componente azul do coeficiente de iluminação difusa.
+| Odr | numérico | Componente vermelha da cor difusa do objeto.
+| Odb | numérico | Componente verde da cor difusa do objeto.
+| Odg | numérico | Componente azul da cor difusa do objeto.
+| Ka | numérico | Coeficiente especular.
+| Theta | numérico | Modela o foco especular.
+
 ## Instalação
 Desenvolvido em Python 3.10.12  
 pygame 2.5.2
 ```bash
 $ pip install -r requirements.txt
 ```
-```bash
-python main.py <1>
-```
-O argumento <1> é o nome do arquivo contendo a malha triangular que deve estar contido em ./data
-Por exemplo:
-```bash
-python main.py 'calice2.byu'
-```
+
 
 ## Funcionamento
+```bash
+python main.py <1> <2>
+```
+O argumento <1> é o nome do arquivo contendo a malha triangular que deve estar contido em ./data  
+O argumento <2> é a flag especificando o modelo de tonalização a ser executada. As flags possíveis são: {--flat, --gouraud, --phong}.  
+Por exemplo:
+```bash
+python main.py 'calice2.byu' --phong
+```
 Uma vez que a malha foi carregada e a aplicação está rodando existem alguns comandos para visualizar diferentes tipos de renderização.  
 | comando | descrição |
 | :---: | :--- |
 1 | Apenas os pontos em coordenadas de tela
 2 | Linhas do algoritmo de Bresenham
 3 | Sólido sem iluminação pelo Scanline
+4 | Sólido iluminado
