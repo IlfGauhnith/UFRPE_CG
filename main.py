@@ -7,10 +7,10 @@ from logger import logger
 import os
 import sys
 
-def draw_phong_shaded_mesh(screen, mesh, tonalization_model):
+def draw_phong_shaded_mesh(screen, mesh, tonalization_model, light):
     for triangle in mesh:
         scan_line_conversion(triangle)
-        phong_shading(triangle, tonalization_model)
+        phong_shading(triangle, tonalization_model, light)
 
         for pixel in triangle.pixels:
             pygame.draw.line(screen, pixel.color, (pixel.x, pixel.y), (pixel.x, pixel.y))
@@ -99,7 +99,7 @@ if __name__ == '__main__':
 
             elif event.key == pygame.K_4:
                 screen.fill((0, 0, 0))
-                draw_phong_shaded_mesh(screen, screen_mesh, tonal_mode)                
+                draw_phong_shaded_mesh(screen, screen_mesh, tonal_mode, light)                
                 pygame.display.update()
                 
     pygame.quit()
