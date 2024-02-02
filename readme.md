@@ -76,19 +76,22 @@ pygame 2.5.2
 ```bash
 $ pip install -r requirements.txt
 ```
-```bash
-python main.py <1>
-```
-O argumento <1> é o nome do arquivo contendo a malha triangular que deve estar contido em ./data
-Por exemplo:
-```bash
-python main.py 'calice2.byu'
-```
+
 
 ## Funcionamento
+```bash
+python main.py <1> <2>
+```
+O argumento <1> é o nome do arquivo contendo a malha triangular que deve estar contido em ./data  
+O argumento <2> é a flag especificando o modelo de tonalização a ser executada. As flags possíveis são: {--flat, --gouraud, --phong}.  
+Por exemplo:
+```bash
+python main.py 'calice2.byu' --phong
+```
 Uma vez que a malha foi carregada e a aplicação está rodando existem alguns comandos para visualizar diferentes tipos de renderização.  
 | comando | descrição |
 | :---: | :--- |
 1 | Apenas os pontos em coordenadas de tela
 2 | Linhas do algoritmo de Bresenham
 3 | Sólido sem iluminação pelo Scanline
+4 | Sólido iluminado
