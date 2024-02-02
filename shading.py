@@ -10,8 +10,7 @@ def phong_shading(triangle,  tonalization_model:str, light:model.Light):
         gouraud(triangle, light)
         
     elif tonalization_model == "--phong":
-        for pixel in triangle.pixels:
-            phong(pixel, triangle)
+        phong(triangle, light)
 
 def compute_normal(mesh, tonalization_model:str):
     if tonalization_model == "--flat":
@@ -19,6 +18,15 @@ def compute_normal(mesh, tonalization_model:str):
             triangle.normal = alg.calculate_surface_normal(triangle)
     
     elif tonalization_model == "--gouraud":
+        for triangle in mesh:
+            triangle.normal = alg.calculate_surface_normal(triangle)
+
+        for triangle in mesh:    
+            triangle.projection_pointA.normal = alg.calculate_vertex_normal(triangle.projection_pointA)
+            triangle.projection_pointB.normal = alg.calculate_vertex_normal(triangle.projection_pointB)
+            triangle.projection_pointC.normal = alg.calculate_vertex_normal(triangle.projection_pointC)
+
+    elif tonalization_model == "--phong":
         for triangle in mesh:
             triangle.normal = alg.calculate_surface_normal(triangle)
 
@@ -151,5 +159,43 @@ def gouraud(triangle, light:model.Light):
         I_final = tuple([0 if v <= 0 else v for v in I_final])
         pixel.color = I_final
 
-def phong(pixel, triangle):
-    pass
+def phong(triangle, light):
+    Ia = tuple((rgb_component * light.ambiental_coef for rgb_component in light.ambiental))
+
+    for pixel in triangle.pixels:
+        Id = None
+        Is = None
+
+        barycentric_coordinates = alg.calculate_barycentric_coordinates_screen(triangle, pixel)
+        N = barycentric_coordinates.alpha * triangle.projection_pointA.normal + barycentric_coordinates.beta * triangle.projection_pointB.normal + barycentric_coordinates.gamma * triangle.projection_pointC.normal
+        N = alg.normalize(N)
+
+        ogb = find_original_point(triangle, pixel)
+        V = calculate_V_vector(ogb)
+        L = calculate_L_vector(light.location, ogb)
+        R = calculate_R_vector(N, L)
+
+        if N * L < 0:
+            if N * V < 0:
+                N = -1 * N
+            else:
+                Is = alg.Coordinate(0, 0, 0)
+                Id = alg.Coordinate(0, 0, 0)
+        if V * R < 0:
+            Is = alg.Coordinate(0, 0, 0)
+
+        if Id is None:   
+            Id = ((N * L) * alg.Coordinate(*light.diffuse_coef))
+            Id = Id.multiply(alg.Coordinate(*light.diffuse_color))
+            Id = Id.multiply(alg.Coordinate(*light.light_color))
+
+        if Is is None:
+            Is = (alg.Coordinate(*light.light_color) * (((R * V) ** light.theta) * light.specular_coef))
+
+        Id = (Id.x, Id.y, Id.z)
+        Is = (Is.x, Is.y, Is.z)
+
+        I_final = [round(Ia[0] + Id[0] + Is[0]), round(Ia[1] + Id[1] + Is[1]), round(Ia[2] + Id[2] + Is[2])]
+        I_final = [255 if v > 255 else v for v in I_final]
+        I_final = tuple([0 if v <= 0 else v for v in I_final])
+        pixel.color = I_final

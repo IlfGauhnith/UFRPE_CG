@@ -37,7 +37,7 @@ def draw_vertex_mesh(screen, mesh):
         pygame.draw.line(screen, (255, 255, 255), (triangle.screen_pointC.x, triangle.screen_pointC.y), (triangle.screen_pointC.x, triangle.screen_pointC.y))
  
 DATA_DIR = "./data"
-TONAL_MODES = ["--flat", "--gouraud"]
+TONAL_MODES = ["--flat", "--gouraud", "--phong"]
 
 if __name__ == '__main__':
     filename = sys.argv[1]
