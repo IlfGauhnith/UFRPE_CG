@@ -1,6 +1,16 @@
 import math
 from logger import logger
 
+class BarycentricCoordinates:
+    
+    def __init__(self, alpha, beta, gamma) -> None:
+        self.alpha = alpha
+        self.beta = beta
+        self.gamma = gamma
+    
+    def __str__(self) -> str:
+        return f"BarycentricCoordinates<alpha:{self.alpha}, beta:{self.beta}, gamma:{self.gamma}>" 
+    
 class Coordinate:
     
     def __init__(self, x:float, y:float, z=0.0, normal=None, color=(255, 255, 255)) -> None:
@@ -63,6 +73,16 @@ class Coordinate:
         
         raise TypeError(f"Cannot divide a vector Coordinate with {type(other)}")
 
+    def multiply(self, other):
+        if isinstance(other, Coordinate):
+            x_comp = self.x * other.x
+            y_comp = self.y * other.y
+            z_comp = self.z * other.z
+
+            return Coordinate(x_comp, y_comp, z_comp)
+        
+        raise TypeError(f"Cannot component-wise multiply a vector Coordinate with {type(other)}")
+    
     __rtruediv__ = __truediv__
     __rmul__ = __mul__
     __rsub__ = __sub__
@@ -131,13 +151,25 @@ def calculate_vertex_normal(vertex:Coordinate):
     
     return normalize(sumup)
 
-def calculate_barycentric_coordinates(triangle):
-    vertex_A = triangle.projection_pointA
-    vertex_B = triangle.projection_pointB
-    vertex_C = triangle.projection_pointC
+def find_barycenter(triangle):
+    triangle.barycenter = (triangle.screen_pointA + triangle.screen_pointB) / 3
 
-    alfa = (vertex_A.x + vertex_B.x + vertex_C.x) / 3
-    beta = (vertex_A.y + vertex_B.y + vertex_C.y) / 3
-    gama = (vertex_A.z + vertex_B.z + vertex_C.z) / 3
+def calculate_barycentric_coordinates_screen(triangle, point):
+    
+    v0 = triangle.screen_pointB - triangle.screen_pointA
+    v1 = triangle.screen_pointC - triangle.screen_pointA
+    v2 = point - triangle.screen_pointA
 
-    triangle.baricentric_coordinates = Coordinate(alfa, beta, gama)
+    d00 = v0 * v0
+    d01 = v0 * v1
+    d11 = v1 * v1
+    d20 = v2 * v0
+    d21 = v2 * v1
+
+    mult = 1.0 / ((d00 * d11 - d01 * d01) + 0.00000001)
+    alpha = mult * (d00 * d21 - d01 * d20)
+    beta = mult * (d11 * d20 - d01 * d21)
+    gamma = 1.0 - alpha - beta
+
+
+    return BarycentricCoordinates(alpha, beta, gamma)

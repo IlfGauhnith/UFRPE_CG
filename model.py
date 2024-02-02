@@ -16,8 +16,8 @@ class Triangle:
         self.screen_pointB = None
         self.screen_pointC = None
 
-        self.baricentric_coordinates = None
-        
+        self.barycenter = None
+
         self.normal = normal
         self.pixels = []
 

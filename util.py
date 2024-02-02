@@ -135,7 +135,3 @@ def screen_project_mesh(view, cam, mesh):
         logger.debug(f"{triangle}")
 
     return mesh
-
-def compute_barycentric_coordinates(mesh):
-    for triangle in mesh:
-        alg.calculate_barycentric_coordinates(triangle)

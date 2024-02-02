@@ -1,4 +1,4 @@
-from util import read_triangle_mesh, read_camera_properties, read_light_properties, camera_project_mesh, screen_project_mesh, compute_barycentric_coordinates
+from util import read_triangle_mesh, read_camera_properties, read_light_properties, camera_project_mesh, screen_project_mesh
 from rasterization import bresenham, scan_line_conversion
 from shading import phong_shading, compute_normal
 import pygame
@@ -64,7 +64,6 @@ if __name__ == '__main__':
     mesh = read_triangle_mesh(input_filename=os.path.join(DATA_DIR, filename))
     camera_projected_mesh = camera_project_mesh(camera, mesh)
     compute_normal(camera_projected_mesh, tonal_mode)
-    compute_barycentric_coordinates(camera_projected_mesh)
     screen_mesh = screen_project_mesh(view, camera, camera_projected_mesh)
 
     draw_solid_mesh(screen, screen_mesh)
